@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>India, the API — v2026.8</title>
+<meta name="description" content="India's Digital Public Infrastructure, documented as a public API. UPI, Aadhaar, ONDC, DigiLocker, CoWIN. Population-scale. Open source. Zero cost." />
+<meta property="og:title" content="India, the API" />
+<meta property="og:description" content="The world builds apps. India built the platform." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Semantic tricolor — used sparingly, as a design system would */
+    --saffron: #FF9933;
+    --green: #138808;
+    --ashoka: #0F4C81;
+
+    /* Base palette */
+    --ink: #0A0E1A;
+    --ink-2: #0F1420;
+    --ink-3: #171C2B;
+    --line: #1F2536;
+    --line-2: #2A324A;
+    --text: #E8E6DF;
+    --text-2: #A5AABB;
+    --text-3: #6B7280;
+
+    --radius: 6px;
+    --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--ink);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--saffron); color: var(--ink); }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ────────── NAV ────────── */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(10, 14, 26, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    max-width: 1280px; margin: 0 auto;
+    padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
+  }
+  .logo {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-style: italic;
+    letter-spacing: -0.5px;
+  }
+  .logo .dot { color: var(--saffron); }
+  .nav-links { display: flex; gap: 28px; font-size: 13px; color: var(--text-2); }
+  .nav-links a:hover { color: var(--text); }
+  .version-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border: 1px solid var(--line-2);
+    border-radius: 100px;
+    color: var(--text-2);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .version-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 50% { opacity: 0.5; } }
+
+  /* ────────── HERO ────────── */
+  .hero {
+    max-width: 1280px; margin: 0 auto;
+    padding: 180px 32px 100px;
+    position: relative;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--saffron);
+    letter-spacing: 0.5px;
+    margin-bottom: 32px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(56px, 9vw, 128px);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 32px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--text-2);
+  }
+  .hero-sub {
+    font-size: 20px;
+    color: var(--text-2);
+    max-width: 640px;
+    line-height: 1.5;
+    margin-bottom: 56px;
+  }
+  .hero-sub strong { color: var(--text); font-weight: 500; }
+
+  /* Status strip */
+  .status-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-top: 24px;
+  }
+  .stat {
+    padding: 24px 24px 24px 0;
+    border-right: 1px solid var(--line);
+  }
+  .stat:last-child { border-right: none; padding-right: 0; }
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 40px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ────────── MANIFESTO ────────── */
+  .manifesto {
+    max-width: 1280px; margin: 0 auto;
+    padding: 120px 32px;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 80px;
+    align-items: start;
+    border-top: 1px solid var(--line);
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-top: 6px;
+  }
+  .manifesto-body {
+    font-family: var(--serif);
+    font-size: 32px;
+    line-height: 1.35;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    max-width: 780px;
+  }
+  .manifesto-body p + p { margin-top: 24px; }
+  .manifesto-body em { font-style: italic; color: var(--saffron); }
+
+  /* ────────── ENDPOINTS ────────── */
+  .endpoints {
+    max-width: 1280px; margin: 0 auto;
+    padding: 60px 32px 120px;
+    border-top: 1px solid var(--line);
+  }
+  .endpoints-header {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 80px;
+    margin-bottom: 60px;
+    padding-top: 60px;
+  }
+  .endpoints-title {
+    font-family: var(--serif);
+    font-size: 56px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .endpoints-desc {
+    font-size: 16px;
+    color: var(--text-2);
+    max-width: 640px;
+    margin-top: 20px;
+  }
+
+  .endpoint-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--line);
+  }
+  .endpoint {
+    display: grid;
+    grid-template-columns: 200px 1fr 260px;
+    gap: 40px;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+    transition: background 0.2s ease;
+  }
+  .endpoint:hover { background: rgba(255, 153, 51, 0.02); }
+  .endpoint-method {
+    font-family: var(--mono);
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .method-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    width: fit-content;
+  }
+  .method-tag.post { background: rgba(19, 136, 8, 0.15); color: var(--green); border: 1px solid rgba(19, 136, 8, 0.3); }
+  .method-tag.get { background: rgba(15, 76, 129, 0.2); color: #6BA5DB; border: 1px solid rgba(15, 76, 129, 0.4); }
+  .endpoint-path { color: var(--text); font-size: 13px; }
+
+  .endpoint-body h3 {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+  .endpoint-body h3 .aka {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-left: 12px;
+    vertical-align: middle;
+  }
+  .endpoint-body p {
+    color: var(--text-2);
+    font-size: 15px;
+    max-width: 560px;
+    margin-top: 12px;
+  }
+  .endpoint-stats {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-3);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .endpoint-stats span { color: var(--text); }
+
+  /* ────────── CHANGELOG ────────── */
+  .changelog {
+    max-width: 1280px; margin: 0 auto;
+    padding: 120px 32px;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 80px;
+  }
+  .changelog h2 {
+    font-family: var(--serif);
+    font-size: 56px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 40px;
+  }
+  .changelog p.intro {
+    color: var(--text-2);
+    margin-bottom: 48px;
+    max-width: 640px;
+  }
+  .log {
+    font-family: var(--mono);
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+  }
+  .log-row {
+    display: grid;
+    grid-template-columns: 120px 20px 1fr;
+    gap: 20px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .log-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .log-ver { color: var(--saffron); }
+  .log-row.founding .log-ver { color: var(--green); font-weight: 600; }
+  .log-dot { color: var(--text-3); }
+  .log-msg { color: var(--text); font-family: var(--sans); font-size: 14px; }
+  .log-msg .muted { color: var(--text-3); }
+
+  /* ────────── FOOTER ────────── */
+  .footer {
+    border-top: 1px solid var(--line);
+    padding: 60px 32px 80px;
+    max-width: 1280px; margin: 0 auto;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 200px 1fr auto;
+    gap: 80px;
+    align-items: end;
+  }
+  .footer-tagline {
+    font-family: var(--serif);
+    font-size: 40px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 640px;
+  }
+  .footer-tagline em { color: var(--saffron); font-style: italic; }
+  .footer-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    text-align: right;
+    line-height: 1.8;
+  }
+  .footer-meta .status-live {
+    color: var(--green);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .footer-meta .status-live::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  /* Tricolor bar signature */
+  .tricolor-bar {
+    height: 3px;
+    display: flex;
+    margin-top: 40px;
+  }
+  .tricolor-bar div { flex: 1; }
+  .tricolor-bar div:nth-child(1) { background: var(--saffron); }
+  .tricolor-bar div:nth-child(2) { background: var(--text); }
+  .tricolor-bar div:nth-child(3) { background: var(--green); }
+
+  /* ────────── RESPONSIVE ────────── */
+  @media (max-width: 900px) {
+    .nav-inner { padding: 12px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 140px 20px 60px; }
+    .hero h1 { font-size: 56px; }
+    .hero-sub { font-size: 17px; }
+    .status-strip { grid-template-columns: 1fr 1fr; }
+    .stat { padding: 20px 16px 20px 0; border-bottom: 1px solid var(--line); }
+    .stat:nth-child(2) { border-right: none; padding-right: 0; }
+    .stat:nth-child(3), .stat:nth-child(4) { border-bottom: none; }
+    .manifesto, .endpoints, .changelog, .footer {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    .manifesto { padding-top: 80px; padding-bottom: 80px; }
+    .manifesto-body { font-size: 22px; }
+    .endpoints-header { grid-template-columns: 1fr; gap: 16px; }
+    .endpoints-title, .changelog h2 { font-size: 36px; }
+    .endpoint { grid-template-columns: 1fr; gap: 16px; padding: 24px 0; }
+    .endpoint-body h3 { font-size: 24px; }
+    .endpoint-body h3 .aka { display: block; margin-left: 0; margin-top: 4px; }
+    .changelog { padding: 80px 20px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+    .footer-tagline { font-size: 28px; }
+    .footer-meta { text-align: left; }
+    .log-row { grid-template-columns: 100px 16px 1fr; gap: 12px; }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo">india<span class="dot">.</span>api</div>
+    <div class="nav-links">
+      <a href="#endpoints">Endpoints</a>
+      <a href="#changelog">Changelog</a>
+      <a href="#about">About</a>
+    </div>
+    <div class="version-tag">v2026.8 — operational</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="eyebrow">/* Public documentation — 15 August 2026 */</div>
+  <h1>India,<br/><em>the API.</em></h1>
+  <p class="hero-sub">
+    Every country celebrates independence with flags. <strong>India shipped infrastructure.</strong>
+    This is the documentation for a stack running at population scale — open, free, and available to anyone who calls it.
+  </p>
+
+  <div class="status-strip">
+    <div class="stat">
+      <div class="stat-num">1.42B</div>
+      <div class="stat-label">Identities online</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">18.7B</div>
+      <div class="stat-label">UPI txns / month</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">22</div>
+      <div class="stat-label">Official languages</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">₹0</div>
+      <div class="stat-label">Cost to the citizen</div>
+    </div>
+  </div>
+</header>
+
+<!-- MANIFESTO -->
+<section class="manifesto">
+  <div class="section-label">01 — Overview</div>
+  <div class="manifesto-body">
+    <p>Most nations built <em>apps</em> on top of somebody else's infrastructure.</p>
+    <p>India built the infrastructure — and gave it away for free. Identity, payments, commerce, health, documents — every layer a public utility. Every citizen a user by birth.</p>
+    <p>Read this as documentation, not decoration. These endpoints are live. They serve a billion people, right now, while you finish this sentence.</p>
+  </div>
+</section>
+
+<!-- ENDPOINTS -->
+<section class="endpoints" id="endpoints">
+  <div class="endpoints-header">
+    <div class="section-label">02 — Endpoints</div>
+    <div>
+      <div class="endpoints-title">The public stack.</div>
+      <p class="endpoints-desc">Eight primary endpoints in the India DPI. Each one an independent module, each one composable, each one deployed at national scale. Response times measured in milliseconds, adoption measured in billions.</p>
+    </div>
+  </div>
+
+  <div class="endpoint-list">
+
+    <div class="endpoint">
+      <div class="endpoint-method">
+        <span class="method-tag post">POST</span>
+        <span class="endpoint-path">/identity/verify</span>
+      </div>
+      <div class="endpoint-body">
+        <h3>Aadhaar <span class="aka">— identity layer</span></h3>
+        <p>Verify identity for 1.42 billion residents. Biometric or one-time password. Sub-second response, zero cost per authentication. The largest identity system ever built.</p>
+      </div>
+      <div class="endpoint-stats">
+        <div>uptime <span>99.98%</span></div>
+        <div>auths/day <span>~90M</span></div>
+        <div>shipped <span>Sep 2009</span></div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-method">
+        <span class="method-tag post">POST</span>
+        <span class="endpoint-path">/payments/send</span>
+      </div>
+      <div class="endpoint-body">
+        <h3>UPI <span class="aka">— payments rail</span></h3>
+        <p>Move money between any two Indian bank accounts. 18.7 billion transactions a month. Settles in under a second. No fees on the rails. Now interoperable with France, UAE, Singapore, Sri Lanka.</p>
+      </div>
+      <div class="endpoint-stats">
+        <div>latency <span>&lt; 1s</span></div>
+        <div>merchant fee <span>0%</span></div>
+        <div>shipped <span>Apr 2016</span></div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-method">
+        <span class="method-tag get">GET</span>
+        <span class="endpoint-path">/commerce/discover</span>
+      </div>
+      <div class="endpoint-body">
+        <h3>ONDC <span class="aka">— open commerce</span></h3>
+        <p>Query products and services across every registered seller in India. One protocol, no platform monopoly. The kirana and the multinational speak the same API.</p>
+      </div>
+      <div class="endpoint-stats">
+        <div>sellers <span>630K+</span></div>
+        <div>categories <span>all</span></div>
+        <div>shipped <span>Apr 2022</span></div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-method">
+        <span class="method-tag post">POST</span>
+        <span class="endpoint-path">/documents/fetch</span>
+      </div>
+      <div class="endpoint-body">
+        <h3>DigiLocker <span class="aka">— document layer</span></h3>
+        <p>Retrieve any government-issued document — Aadhaar, PAN, licence, degree, ration card. Legally equivalent to the physical original. 300 million citizens carry their government in their pocket.</p>
+      </div>
+      <div class="endpoint-stats">
+        <div>docs stored <span>7B+</span></div>
+        <div>issuers <span>2,300+</span></div>
+        <div>shipped <span>Jul 2015</span></div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-method">
+        <span class="method-tag post">POST</span>
+        <span class="endpoint-path">/toll/deduct</span>
+      </div>
+      <div class="endpoint-body">
+        <h3>FASTag <span class="aka">— roads &amp; mobility</span></h3>
+        <p>Deduct highway tolls in motion. RFID-based, prepaid, no stop. 98% of national highway toll collection. The queue at the plaza is a solved problem.</p>
+      </div>
+      <div class="endpoint-stats">
+        <div>coverage <span>98%</span></div>
+        <div>daily txns <span>10M+</span></div>
+        <div>shipped <span>Dec 2019</span></div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-method">
+        <span class="method-tag post">POST</span>
+        <span class="endpoint-path">/vaccination/schedule</span>
+      </div>
+      <div class="endpoint-body">
+        <h3>CoWIN <span class="aka">— health delivery</span></h3>
+        <p>Deployed for 2.2 billion vaccine doses across 22 languages. Peak throughput: 8.6 million doses per day. Handed to Indonesia, Sri Lanka, Vietnam as open source.</p>
+      </div>
+      <div class="endpoint-stats">
+        <div>doses served <span>2.2B</span></div>
+        <div>peak/day <span>8.6M</span></div>
+        <div>shipped <span>Jan 2021</span></div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-method">
+        <span class="method-tag post">POST</span>
+        <span class="endpoint-path">/tax/file</span>
+      </div>
+      <div class="endpoint-body">
+        <h3>GSTN <span class="aka">— tax network</span></h3>
+        <p>One indirect-tax API for 14 million registered businesses. Real-time invoicing, reconciliation, filing. Killed the tax inspector's clipboard.</p>
+      </div>
+      <div class="endpoint-stats">
+        <div>businesses <span>14M</span></div>
+        <div>invoices/day <span>25M+</span></div>
+        <div>shipped <span>Jul 2017</span></div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-method">
+        <span class="method-tag get">GET</span>
+        <span class="endpoint-path">/health/records</span>
+      </div>
+      <div class="endpoint-body">
+        <h3>ABHA <span class="aka">— portable health ID</span></h3>
+        <p>A health identity that travels with the patient, not the hospital. Records portable across every provider in the country. Consent-based access, always.</p>
+      </div>
+      <div class="endpoint-stats">
+        <div>ids issued <span>700M+</span></div>
+        <div>linked records <span>50Cr+</span></div>
+        <div>shipped <span>Sep 2021</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CHANGELOG -->
+<section class="changelog" id="changelog">
+  <div class="section-label">03 — Changelog</div>
+  <div>
+    <h2>Release history.</h2>
+    <p class="intro">A country, read as a repository. Every major release below shipped to production and stayed in production. No rollbacks.</p>
+
+    <div class="log">
+      <div class="log-row"><div class="log-ver">v2026.8</div><div class="log-dot">●</div><div class="log-msg">Aadhaar-linked AI KYC pilots. <span class="muted">Deep-fake resistance shipped nationwide.</span></div></div>
+      <div class="log-row"><div class="log-ver">v2023.9</div><div class="log-dot">●</div><div class="log-msg">UPI goes cross-border. <span class="muted">France, UAE, Singapore, Sri Lanka onboarded.</span></div></div>
+      <div class="log-row"><div class="log-ver">v2022.4</div><div class="log-dot">●</div><div class="log-msg">ONDC beta. <span class="muted">E-commerce unbundled from platform monopoly.</span></div></div>
+      <div class="log-row"><div class="log-ver">v2021.1</div><div class="log-dot">●</div><div class="log-msg">CoWIN. <span class="muted">2.2B vaccine doses. Largest public health rollout in history.</span></div></div>
+      <div class="log-row"><div class="log-ver">v2017.7</div><div class="log-dot">●</div><div class="log-msg">GST Network. <span class="muted">One tax, one API, one market.</span></div></div>
+      <div class="log-row"><div class="log-ver">v2016.4</div><div class="log-dot">●</div><div class="log-msg">UPI. <span class="muted">Rewrote how money moves.</span></div></div>
+      <div class="log-row"><div class="log-ver">v2014.8</div><div class="log-dot">●</div><div class="log-msg">Jan Dhan. <span class="muted">500M bank accounts opened. Fastest financial inclusion in history.</span></div></div>
+      <div class="log-row"><div class="log-ver">v2009.9</div><div class="log-dot">●</div><div class="log-msg">Aadhaar. <span class="muted">Identity for a billion.</span></div></div>
+      <div class="log-row founding"><div class="log-ver">v1.0.0</div><div class="log-dot">●</div><div class="log-msg"><strong>15 August 1947.</strong> <span class="muted">Initial release. India goes live.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer" id="about">
+  <div class="footer-grid">
+    <div class="section-label">04 — Footer</div>
+    <div class="footer-tagline">
+      The world builds apps.<br/>
+      India built <em>the platform.</em>
+    </div>
+    <div class="footer-meta">
+      <div class="status-live">All systems operational</div>
+      <div>Made in Bharat · Open for the world</div>
+      <div>Concept: Vedant Kasat · MESA / IIMB</div>
+      <div>Jai Hind — 15.08.2026</div>
+    </div>
+  </div>
+  <div class="tricolor-bar" aria-hidden="true">
+    <div></div><div></div><div></div>
+  </div>
+</footer>
+
+</body>
+</html>
